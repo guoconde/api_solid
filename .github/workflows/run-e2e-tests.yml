@@ -8,6 +8,23 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
+      api:
+        build:
+          context: .
+          dockerfile: Dockerfile.dev
+        restart: unless-stopped
+        init: true
+        environment:
+          - "postgresql://docker:docker@localhost:5432/apisolid?schema=public"
+        ports:
+          - 3333:3333
+        volumes:
+          - .:/app
+          - /app/node_modules
+        depends_on:
+          - postgres
+        extra_hosts:
+          - "host.docker.internal:host-gateway"
       postgres:
         image: postgres:15
         ports:
