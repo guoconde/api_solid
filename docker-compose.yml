@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    init: true
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRESQL_USERNAME}:${POSTGRESQL_PASSWORD}@postgres:${POSTGRESQL_PORT}/${POSTGRESQL_DATABASE}?schema=public
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    ports:
+      - ${POSTGRESQL_PORT}:5432
+    environment:
+      - POSTGRES_MULTIPLE_DATABASES=${POSTGRESQL_DATABASE},${POSTGRESQL_DATABASE}_test
+      - POSTGRES_USER=${POSTGRESQL_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./.postgres:/docker-entrypoint-initdb.d
+volumes:
+  node_modules:
+    driver: local
+  postgres:
+    driver: local
