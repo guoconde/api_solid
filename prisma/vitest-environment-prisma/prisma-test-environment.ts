@@ -31,6 +31,10 @@ export default <Environment>{
     const databaseURL = generateDatabaseUrl(schema);
 
     console.log("databaseURL", databaseURL);
+    console.log(
+      "OUTRAAAAA",
+      "postgresql://docker:docker@localhost:5432/apisolid?schema=public"
+    );
 
     process.env.DATABASE_URL = databaseURL;
 
