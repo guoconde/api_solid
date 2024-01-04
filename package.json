@@ -7,6 +7,7 @@
     "dev": "tsx watch src/server.ts",
     "start": "node build/server.js",
     "build": "tsup src --out-dir build",
+    "migrate:deploy": "npx prisma migrate deploy",
     "docker:up": "docker compose up -d --build",
     "docker:down": "docker compose down",
     "docker:stop": "docker compose stop",
