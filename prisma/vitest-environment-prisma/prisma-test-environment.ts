@@ -4,19 +4,14 @@ import { execSync } from "node:child_process";
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 
-// DATABASE_URL="postgresql://docker:docker@localhost:5432/apisolid"
-
 const prisma = new PrismaClient();
 
 const generateDatabaseUrl = (schema: string) => {
-  let url;
   if (!process.env.DATABASE_URL) {
-    url = new URL(
-      "postgresql://docker:docker@localhost:5432/apisolid?schema=public"
-    );
-  } else {
-    url = new URL(process.env.DATABASE_URL);
+    throw new Error("DATABASE_URL is not defined");
   }
+
+  const url = new URL(process.env.DATABASE_URL);
 
   url.searchParams.set("schema", schema);
 
@@ -29,12 +24,6 @@ export default <Environment>{
   setup: async () => {
     const schema = randomUUID();
     const databaseURL = generateDatabaseUrl(schema);
-
-    console.log("databaseURL", databaseURL);
-    console.log(
-      "OUTRAAAAA",
-      "postgresql://docker:docker@localhost:5432/apisolid?schema=public"
-    );
 
     process.env.DATABASE_URL = databaseURL;
 
