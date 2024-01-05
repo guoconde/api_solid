@@ -3,7 +3,6 @@ import { Environment } from "vitest";
 import { execSync } from "node:child_process";
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
-import { env } from "node:process";
 
 const prisma = new PrismaClient();
 
