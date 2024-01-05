@@ -34,4 +34,4 @@ jobs:
           POSTGRESQL_PASSWORD: docker
           POSTGRESQL_DATABASE: apisolid
           POSTGRESQL_PORT: 5432
-          DATABASE_URL: "postgresql://docker:docker@postgres:5432/apisolid?schema=public"
+          DATABASE_URL: "postgresql://docker:docker@localhost:5432/apisolid?schema=public"
