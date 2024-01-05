@@ -7,14 +7,11 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const generateDatabaseUrl = (schema: string) => {
-  let url;
   if (!process.env.DATABASE_URL) {
-    url = new URL("postgresql://postgres:postgres@localhost:5432/postgres");
-  } else {
-    url = new URL(process.env.DATABASE_URL);
+    throw new Error("DATABASE_URL is not defined");
   }
 
-  console.log("DATABASE_URL", url.toString());
+  const url = new URL(process.env.DATABASE_URL);
 
   url.searchParams.set("schema", schema);
 
