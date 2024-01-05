@@ -3,8 +3,7 @@ import { Environment } from "vitest";
 import { execSync } from "node:child_process";
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
-
-// DATABASE_URL="postgresql://docker:docker@localhost:5432/apisolid"
+import { env } from "node:process";
 
 const prisma = new PrismaClient();
 
