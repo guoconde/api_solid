@@ -9,6 +9,8 @@ const envSchema = z.object({
   POSTGRESQL_DATABASE: z.string(),
   POSTGRESQL_PORT: z.coerce.number(),
   JWT_SECRET: z.string(),
+  PGADMIN_DEFAULT_EMAIL: z.string().email(),
+  PGADMIN_DEFAULT_PASSWORD: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);

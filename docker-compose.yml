@@ -1,39 +1,36 @@
-version: "3"
-
 services:
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    restart: unless-stopped
-    init: true
-    environment:
-      - DATABASE_URL=postgresql://${POSTGRESQL_USERNAME}:${POSTGRESQL_PASSWORD}@postgres:${POSTGRESQL_PORT}/${POSTGRESQL_DATABASE}?schema=public
-    ports:
-      - ${PORT}:${PORT}
-    volumes:
-      - .:/app
-      - /app/node_modules
-    env_file:
-      - .env
-    depends_on:
-      - postgres
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
   postgres:
-    image: postgres:15
-    restart: unless-stopped
+    image: postgres:16
+    restart: always
     ports:
       - ${POSTGRESQL_PORT}:5432
     environment:
-      - POSTGRES_MULTIPLE_DATABASES=${POSTGRESQL_DATABASE},${POSTGRESQL_DATABASE}_test
       - POSTGRES_USER=${POSTGRESQL_USERNAME}
       - POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD}
+      - POSTGRES_DB=${POSTGRESQL_DATABASE}
     volumes:
       - postgres:/var/lib/postgresql/data
-      - ./.postgres:/docker-entrypoint-initdb.d
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1024M
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - 8080:80
+    volumes:
+      - pgadmin:/var/lib/pgadmin
 volumes:
-  node_modules:
-    driver: local
   postgres:
+    driver: local
+  pgadmin:
     driver: local
